@@ -1,10 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Low Volume Project</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
+    
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="manifest" href="manifest.json">
+
     <style>
         body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #e0e0e0; margin: 0; padding-top: 60px; padding-bottom: 110px; }
         .navbar { position: fixed; top: 0; left: 0; width: 100%; background: #111; display: flex; border-bottom: 2px solid #333; z-index: 1000; overflow-x: auto; }
@@ -23,31 +32,17 @@
         .f-group { display: flex; flex-direction: column; flex: 1; }
         label { font-size: 0.6em; color: #666; margin-bottom: 3px; text-align: center; }
         input, select { background: #333; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 5px; font-size: 0.9em; text-align: center; width: 100%; }
-        
-        /* Controles Inferiores */
         .footer-controls { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; padding: 10px; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; border-top: 1px solid #333; box-sizing: border-box; z-index: 1000; }
         .btn { padding: 12px 5px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; cursor: pointer; }
         .btn-save { background: #00ff88; color: #000; }
         .btn-clear-fields { background: #444; color: #fff; }
         .btn-clear-hist { background: #ff4444; color: #fff; }
-        
-        /* Histórico */
         .hist-card { background: #111; border: 1px solid #00aaff; padding: 10px; margin-bottom: 15px; border-radius: 8px; font-size: 0.85em; }
         .hist-date { color: #00aaff; font-weight: bold; display: block; margin-bottom: 5px; border-bottom: 1px solid #333; }
         .hist-table { width: 100%; font-size: 0.85em; border-collapse: collapse; }
         .hist-table td { padding: 5px; border-bottom: 1px solid #222; }
     </style>
-</head>
-<body>
-    <div class="navbar">
-        <button class="nav-btn active" onclick="openTab('tab-Seg', this)">Seg</button>
-        <button class="nav-btn" onclick="openTab('tab-Ter', this)">Ter</button>
-        <button class="nav-btn" onclick="openTab('tab-Qui', this)">Qui</button>
-        <button class="nav-btn" onclick="openTab('tab-Sex', this)">Sex</button>
-        <button class="nav-btn nav-btn-hist" onclick="openTab('tab-Hist', this)" style="color:#00aaff">Hist</button>
-    </div>
-    <div class="container">
-<div id="tab-Seg" class="tab-content active"><h1>SEGUNDA: Upper A</h1><div class="card"><span class="nome">1. Supino Inclinado Máquina</span><span class="dica">💡 Foco peitoral superior. Descida lenta (3 segundos) e alongamento máximo embaixo.</span>
+</head><body><div class="navbar"><button class="nav-btn active" onclick="openTab('tab-Seg', this)">Seg</button><button class="nav-btn " onclick="openTab('tab-Ter', this)">Ter</button><button class="nav-btn " onclick="openTab('tab-Qui', this)">Qui</button><button class="nav-btn " onclick="openTab('tab-Sex', this)">Sex</button><button class="nav-btn" onclick="openTab('tab-Hist', this)" style="color:#00aaff">Hist</button></div><div class="container"><div id="tab-Seg" class="tab-content active"><h1>SEGUNDA: Upper A</h1><div class="card"><span class="nome">1. Supino Inclinado Máquina</span><span class="dica">💡 Foco peitoral superior. Descida lenta (3 segundos) e alongamento máximo embaixo.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_0" oninput="asave()"></div>
@@ -83,7 +78,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Supino Reto Máquina</span><span class="dica">💡 Escápulas bem coladas no banco para isolar o peitoral e proteger o ombro.</span>
+            </div></div><div class="card"><span class="nome">3. Supino Reto Máquina</span><span class="dica">💡 Escápulas bem coladas no banco para isolar o peitoral e proteger o ombro.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_4" oninput="asave()"></div>
@@ -101,7 +96,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Remada Baixa Triângulo</span><span class="dica">💡 Coluna reta. Puxe em direção ao umbigo, esmagando a dorsal.</span>
+            </div></div><div class="card"><span class="nome">4. Remada Baixa Triângulo</span><span class="dica">💡 Coluna reta. Puxe em direção ao umbigo, esmagando a dorsal.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_6" oninput="asave()"></div>
@@ -119,7 +114,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Tríceps Corda</span><span class="dica">💡 Cotovelos colados nas costelas. Abra a corda no final para pico de contração.</span>
+            </div></div><div class="card"><span class="nome">5. Tríceps Corda</span><span class="dica">💡 Cotovelos colados nas costelas. Abra a corda no final para pico de contração.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_8" oninput="asave()"></div>
@@ -137,7 +132,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Rosca Direta Barra EZ</span><span class="dica">💡 Barra em W para proteger os punhos. Subida explosiva, descida controlada.</span>
+            </div></div><div class="card"><span class="nome">6. Rosca Direta Barra EZ</span><span class="dica">💡 Barra em W para proteger os punhos. Subida explosiva, descida controlada.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_10" oninput="asave()"></div>
@@ -191,7 +186,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Leg Press (Pés Altos)</span><span class="dica">💡 PÉS NO TOPO DA PLATAFORMA (para posterior/glúteo). Jamais trave totalmente o joelho (carga de referência: 90kg).</span>
+            </div></div><div class="card"><span class="nome">3. Leg Press (Pés Altos)</span><span class="dica">💡 PÉS NO TOPO DA PLATAFORMA. Jamais trave totalmente o joelho (Carga ref: 90kg).</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_16" oninput="asave()"></div>
@@ -209,7 +204,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Cadeira Adutora</span><span class="dica">💡 Essencial para a 'tora' da perna e estabilidade do joelho. 2 séries pesadas.</span>
+            </div></div><div class="card"><span class="nome">4. Cadeira Adutora</span><span class="dica">💡 Essencial para a 'tora' da perna e estabilidade do joelho. 2 séries pesadas.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_18" oninput="asave()"></div>
@@ -227,7 +222,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Cadeira Extensora</span><span class="dica">💡 Foco total no reto femoral. 1s subida explosiva, 3s descida controlada.</span>
+            </div></div><div class="card"><span class="nome">5. Cadeira Extensora</span><span class="dica">💡 Foco total no resto femoral. 1s subida explosiva, 3s descida controlada.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_20" oninput="asave()"></div>
@@ -281,7 +276,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Elevação Lateral Cabo</span><span class="dica">💡 Cabo por trás do corpo. Mantenha a tensão constante no deltoide.</span>
+            </div></div><div class="card"><span class="nome">3. Elevação Lateral Cabo</span><span class="dica">💡 Cabo por trás do corpo. Mantenha a tensão constante no deltoide.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_26" oninput="asave()"></div>
@@ -299,7 +294,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Remada Articulada (Máquina)</span><span class="dica">💡 Apoie bem o peito. Esqueça o equilíbrio e foque na tração dorsal pesada.</span>
+            </div></div><div class="card"><span class="nome">4. Remada Articulada (Máquina)</span><span class="dica">💡 Apoie bem o peito. Esqueça o equilíbrio e foque na tração dorsal pesada.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_28" oninput="asave()"></div>
@@ -317,7 +312,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Tríceps Francês Cabo</span><span class="dica">💡 Braço estático ao lado da orelha. Movimente apenas o antebraço.</span>
+            </div></div><div class="card"><span class="nome">5. Tríceps Francês Cabo</span><span class="dica">💡 Braço estático ao lado da orelha. Movimente apenas o antebraço.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_30" oninput="asave()"></div>
@@ -335,7 +330,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Rosca Martelo</span><span class="dica">💡 Pegada neutra (polegar para cima) para braquial e antebraço.</span>
+            </div></div><div class="card"><span class="nome">6. Rosca Martelo</span><span class="dica">💡 Pegada neutra (polegar para cima) para braquial e antebraço.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_32" oninput="asave()"></div>
@@ -353,7 +348,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div></div><div id="tab-Sex" class="tab-content "><h1>SEXTA: Lower 2</h1><div class="card"><span class="nome">1. Stiff com Halteres</span><span class="dica">💡 JOELHOS DESTRAVADOS, mas fixos. Jogue o quadril para trás até sentir alongar o posterior.</span>
+            </div></div></div><div id="tab-Sex" class="tab-content "><h1>SEXTA: Lower 2</h1><div class="card"><span class="nome">1. Stiff com Halteres</span><span class="dica">💡 JOELHOS DESTRAVADOS, mas fixos. Jogue o quadril para trás até sentir alongar.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_34" oninput="asave()"></div>
@@ -371,7 +366,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">2. Mesa Flexora</span><span class="dica">💡 Mantenha o quadril colado no banco para isolar os isquiotibiais na contração.</span>
+            </div></div><div class="card"><span class="nome">2. Mesa Flexora</span><span class="dica">💡 Mantenha o quadril colado no banco para isolar os isquiotibiais.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_36" oninput="asave()"></div>
@@ -389,7 +384,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Leg Press Unilateral</span><span class="dica">💡 Substitui o Búlgaro com mais estabilidade. Foco em força e glúteo.</span>
+            </div></div><div class="card"><span class="nome">3. Leg Press Unilateral</span><span class="dica">💡 Substitui o Búlgaro com mais estabilidade. Foco em força e glúteo.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_38" oninput="asave()"></div>
@@ -407,7 +402,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Panturrilha em Pé</span><span class="dica">💡 Alongue o máximo na descida (fase excêntrica) e segure 1s embaixo.</span>
+            </div></div><div class="card"><span class="nome">4. Panturrilha em Pé</span><span class="dica">💡 Alongue o máximo na descida (fase excêntrica) e segure 1s embaixo.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_40" oninput="asave()"></div>
@@ -425,7 +420,7 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div><div class="card"><span class="nome">Cadeira Extensora</span><span class="dica">💡 Volume extra para garantir a frequência 2x/semana de quadríceps.</span>
+            </div></div><div class="card"><span class="nome">5. Cadeira Extensora</span><span class="dica">💡 Volume extra para garantir a frequência 2x/semana de quadríceps.</span>
             <div class="serie-box"><span class="serie-label">Série Válida 1</span>
                 <div class="inputs">
                     <div class="f-group"><label>KG</label><input type="number" step="any" id="k_42" oninput="asave()"></div>
@@ -443,112 +438,70 @@
                         <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
                     </select></div>
                 </div>
-            </div></div></div>
-    <div id="tab-Hist" class="tab-content"><h1>Histórico</h1><div id="hList">Vazio.</div></div>
-    </div>
+            </div></div></div><div id="tab-Hist" class="tab-content"><h1>Histórico</h1><div id="hList">Histórico vazio.</div></div></div>
     <div class="footer-controls">
         <button class="btn btn-save" onclick="save()">SALVAR HOJE</button>
         <button class="btn btn-clear-fields" onclick="cf()">LIMPAR CAMPOS</button>
         <button class="btn btn-clear-hist" onclick="ch()">APAGAR HIST</button>
     </div>
-
-    <script>
-        // Lógica de Abas e Navegação
-        function openTab(id, b) {
-            document.querySelectorAll('.tab-content, .nav-btn').forEach(x => x.classList.remove('active'));
-            document.getElementById(id).classList.add('active'); b.classList.add('active');
-            window.scrollTo(0,0);
-            if(id === 'tab-Hist') renderH();
-        }
-
-        // Função para Salvar o Treino (Anti-Duplicação Reforçada)
-        function save() {
-            let date = new Date().toLocaleDateString('pt-BR');
-            let h = JSON.parse(localStorage.getItem('lvp_h') || '[]');
-            let entry = { d: date, data: [] };
-            let active = document.querySelector('.tab-content.active');
-            
-            if(active.id === 'tab-Hist') return alert("Selecione um treino primeiro.");
-
-            active.querySelectorAll('.card').forEach(c => {
-                c.querySelectorAll('.serie-box').forEach((s, i) => {
-                    let k = s.querySelector('input[id^="k_"]').value, r = s.querySelector('input[id^="r_"]').value;
-                    let rir = s.querySelector('select').value;
-                    if(k || r) entry.data.push({n: c.querySelector('.nome').innerText, s: i+1, k: k, r: r, rir: rir});
-                });
+<script>
+    function openTab(id, b) {
+        document.querySelectorAll('.tab-content, .nav-btn').forEach(x => x.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); b.classList.add('active');
+        window.scrollTo(0,0);
+        if(id === 'tab-Hist') renderH();
+    }
+    function save() {
+        let date = new Date().toLocaleDateString('pt-BR');
+        let h = JSON.parse(localStorage.getItem('lvp_h') || '[]');
+        let entry = { d: date, data: [] };
+        let active = document.querySelector('.tab-content.active');
+        if(active.id === 'tab-Hist') return alert("Selecione um treino primeiro.");
+        active.querySelectorAll('.card').forEach(c => {
+            c.querySelectorAll('.serie-box').forEach((s, i) => {
+                let k = s.querySelector('input[id^="k_"]').value, r = s.querySelector('input[id^="r_"]').value;
+                let rir = s.querySelector('select').value;
+                if(k || r) entry.data.push({n: c.querySelector('.nome').innerText, s: i+1, k: k, r: r, rir: rir});
             });
-
-            if(!entry.data.length) return alert("Preencha ao menos uma carga!");
-
-            // LOGICA ANTI-DUPLICIDADE
-            // Cria uma assinatura baseada na data + conteúdo para comparar
-            let sig = date + JSON.stringify(entry.data);
-            if(sig === localStorage.getItem('lvp_sig')) {
-                return alert("Atenção: Este treino exato já foi salvo hoje com esses mesmos valores!");
-            }
-
-            h.unshift(entry); // Adiciona no topo
-            localStorage.setItem('lvp_h', JSON.stringify(h.slice(0,50))); // Mantém os últimos 50 treinos
-            localStorage.setItem('lvp_sig', sig); // Guarda a assinatura para evitar duplicação
-
-            alert("✅ Treino arquivado com sucesso!");
-            if(confirm("Deseja limpar os campos de peso/reps agora que salvou?")) cf();
+        });
+        if(!entry.data.length) return alert("Preencha ao menos uma carga!");
+        let sig = date + JSON.stringify(entry.data);
+        if(sig === localStorage.getItem('lvp_sig')) return alert("Este treino exato já foi salvo hoje!");
+        h.unshift(entry);
+        localStorage.setItem('lvp_h', JSON.stringify(h.slice(0,50)));
+        localStorage.setItem('lvp_sig', sig);
+        alert("✅ Treino arquivado com sucesso!");
+        if(confirm("Deseja limpar os campos de hoje?")) cf();
+    }
+    function renderH() {
+        let h = JSON.parse(localStorage.getItem('lvp_h') || '[]');
+        const container = document.getElementById('hList');
+        if(!h.length) return container.innerHTML = "Histórico vazio.";
+        container.innerHTML = h.map(session => `
+            <div class="hist-card"><span class="hist-date">📅 ${session.d}</span>
+                <table class="hist-table">
+                    ${session.data.map(d => `<tr><td>${d.n} (S${d.s})</td><td><b>${d.k}kg</b></td><td>${d.r}r</td><td>${d.rir}</td></tr>`).join('')}
+                </table>
+            </div>`).join('');
+    }
+    function asave() {
+        document.querySelectorAll('input, select').forEach(i => localStorage.setItem('cur_'+i.id, i.value));
+    }
+    function cf() {
+        if(confirm("Zerar campos de hoje? O histórico será mantido.")) {
+            document.querySelectorAll('input').forEach(i => { i.value=""; localStorage.removeItem('cur_'+i.id); });
+            localStorage.removeItem('lvp_sig'); alert("Campos limpos!");
         }
-
-        // Renderiza o Histórico (Layout "Tabela Desktop/Mobile Friendly")
-        function renderH() {
-            let h = JSON.parse(localStorage.getItem('lvp_h') || '[]');
-            const container = document.getElementById('hList');
-            if(history.length === 0) return container.innerHTML = "Histórico vazio.";
-
-            container.innerHTML = h.map(session => `
-                <div class="hist-card">
-                    <span class="hist-date">📅 ${session.d}</span>
-                    <table class="hist-table">
-                        ${session.data.map(d => `<tr><td>${d.n} (S${d.s})</td><td><b>${d.k}kg</b></td><td>${d.r} r</td><td>${d.rir}</td></tr>`).join('')}
-                    </table>
-                </div>
-            `).join('');
+    }
+    function ch() {
+        if(confirm("⚠️ APAGAR TODO O HISTÓRICO PARA SEMPRE?")) {
+            localStorage.removeItem('lvp_h'); localStorage.removeItem('lvp_sig'); renderH(); alert("Histórico apagado.");
         }
-
-        // Auto-Save automático enquanto digita
-        function asave() {
-            document.querySelectorAll('input, select').forEach(i => {
-                localStorage.setItem('cur_'+i.id, i.value);
-            });
-        }
-
-        // Carrega os dados salvos automaticamente ao carregar a página
-        function loadData() {
-            document.querySelectorAll('input, select').forEach(i => {
-                let v = localStorage.getItem('cur_'+i.id);
-                if(v) i.value = v;
-            });
-        }
-
-        // LIMPAR CAMPOS (Apaga Kg/Reps de hoje, mantém histórico)
-        function cf() {
-            if(confirm("Deseja zerar os campos de peso e reps? O histórico continuará salvo. Confirmar?")) {
-                document.querySelectorAll('input').forEach(i => {
-                    i.value="";
-                    localStorage.removeItem('cur_'+i.id);
-                });
-                localStorage.removeItem('lvp_sig'); // Reseta a assinatura para permitir salvar novo valor
-                alert("Campos limpos!");
-            }
-        }
-
-        // APAGAR HIST (Botão Nuclear)
-        function ch() {
-            if(confirm("⚠️ ATENÇÃO: Isso vai apagar todo o seu HISTÓRICO de treinos para sempre. Tem certeza?")) {
-                localStorage.removeItem('lvp_h');
-                localStorage.removeItem('lvp_sig');
-                renderH();
-                alert("Histórico apagado.");
-            }
-        }
-
-        window.onload = loadData;
-    </script>
-</body>
-</html>
+    }
+    window.onload = () => {
+        document.querySelectorAll('input, select').forEach(i => {
+            let v = localStorage.getItem('cur_'+i.id); if(v) i.value = v;
+        });
+    };
+</script>
+</body></html>
