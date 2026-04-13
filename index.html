@@ -297,18 +297,20 @@ function updateStatusBar() {
 }
 
 // ─── API GOOGLE SHEETS ─────────────────────────────────────────
+// Apps Script redireciona via 302 — usamos só GET com redirect:follow
+// POST via body não funciona com CORS; enviamos tudo como GET com ?payload=
 async function apiGet(action) {
   if (!config.url) throw new Error('URL não configurada');
-  const res = await fetch(`${config.url}?action=${action}`);
-  return res.json();
+  const res = await fetch(config.url + '?action=' + action, { redirect: 'follow' });
+  const text = await res.text();
+  return JSON.parse(text);
 }
 async function apiPost(body) {
   if (!config.url) throw new Error('URL não configurada');
-  const res = await fetch(config.url, {
-    method: 'POST',
-    body: JSON.stringify(body)
-  });
-  return res.json();
+  const encoded = encodeURIComponent(JSON.stringify(body));
+  const res = await fetch(config.url + '?payload=' + encoded, { redirect: 'follow' });
+  const text = await res.text();
+  return JSON.parse(text);
 }
 
 // ─── SYNC ──────────────────────────────────────────────────────
