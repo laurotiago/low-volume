@@ -1,525 +1,700 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LVP - Upper Perfeito (Sem Abdomen)</title>
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0a0a0a">
-    
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LVP — Ficha de Treino</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --green:#00c97a;--green-dim:#009a5e;--green-bg:rgba(0,201,122,0.08);
+    --amber:#e8a020;--amber-bg:rgba(232,160,32,0.1);
+    --blue:#3b9de8;--blue-bg:rgba(59,157,232,0.1);
+    --bg:#0a0a0a;--bg2:#111;--bg3:#181818;--bg4:#202020;
+    --border:#2a2a2a;--border2:#333;
+    --txt:#e8e8e8;--txt2:#999;--txt3:#555;
+    --danger:#e84040;
+  }
+  html,body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;}
+  body{padding-top:52px;padding-bottom:72px;}
 
-    <style>
-        body { font-family: -apple-system, sans-serif; background: #0a0a0a; color: #e0e0e0; margin: 0; padding-top: 60px; padding-bottom: 110px; }
-        .navbar { position: fixed; top: 0; left: 0; width: 100%; background: #111; display: flex; border-bottom: 2px solid #333; z-index: 1000; overflow-x: auto; }
-        .nav-btn { flex: 1; padding: 15px 5px; border: none; background: none; color: #888; font-weight: bold; font-size: 0.75em; text-transform: uppercase; cursor: pointer; min-width: 70px; }
-        .nav-btn.active { color: #00ff88; border-bottom: 3px solid #00ff88; background: #1a1a1a; }
-        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        h1 { color: #00ff88; text-align: center; text-transform: uppercase; font-size: 1.1em; letter-spacing: 1px; margin: 10px 0; }
-        .card { background: #161616; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #222; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .nome { font-weight: bold; font-size: 1em; color: #fff; display: block; }
-        .dica { color: #ffa500; display: block; font-size: 0.8em; margin-top: 8px; font-style: italic; line-height: 1.4; }
-        .serie-box { background: #222; padding: 10px; border-radius: 8px; margin-top: 10px; border-left: 3px solid #00ff88; }
-        .serie-label { font-size: 0.7em; font-weight: bold; color: #00ff88; margin-bottom: 5px; display: block; }
-        .inputs { display: flex; gap: 8px; margin-top: 5px; }
-        .f-group { display: flex; flex-direction: column; flex: 1; }
-        label { font-size: 0.6em; color: #666; margin-bottom: 3px; text-align: center; }
-        input, select { background: #333; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 5px; font-size: 0.9em; text-align: center; width: 100%; }
-        .footer-controls { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; padding: 10px; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; border-top: 1px solid #333; box-sizing: border-box; z-index: 1000; }
-        .btn { padding: 12px 5px; border: none; border-radius: 8px; font-weight: bold; font-size: 0.7em; text-transform: uppercase; cursor: pointer; }
-        .btn-save { background: #00ff88; color: #000; }
-        .btn-clear-fields { background: #444; color: #fff; }
-        .btn-clear-hist { background: #ff4444; color: #fff; }
-        .hist-card { background: #111; border: 1px solid #00aaff; padding: 10px; margin-bottom: 15px; border-radius: 8px; font-size: 0.85em; }
-        .hist-date { color: #00aaff; font-weight: bold; display: block; margin-bottom: 5px; border-bottom: 1px solid #333; }
-        .hist-table { width: 100%; font-size: 0.85em; border-collapse: collapse; }
-        .hist-table td { padding: 5px; border-bottom: 1px solid #222; }
-    </style>
-</head><body><div class="navbar"><button class="nav-btn active" onclick="openTab('tab-Seg', this)">Seg</button><button class="nav-btn " onclick="openTab('tab-Ter', this)">Ter</button><button class="nav-btn " onclick="openTab('tab-Qui', this)">Qui</button><button class="nav-btn " onclick="openTab('tab-Sex', this)">Sex</button><button class="nav-btn" onclick="openTab('tab-Hist', this)" style="color:#00aaff">Hist</button></div><div class="container"><div id="tab-Seg" class="tab-content active"><h1>SEGUNDA: Upper A</h1><div class="card"><span class="nome">1. Supino Inclinado Máquina</span><span class="dica">💡 Foco em carga bruta. 2 séries de 5-9 reps até a falha.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_0" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_0" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_0" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_1" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_1" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_1" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">2. Puxada Alta Pronada</span><span class="dica">💡 Foco Upper Back. Puxe com o cotovelo para fora e sinta a escápula.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_2" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_2" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_2" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_3" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_3" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_3" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">3. Peck Deck (Voador)</span><span class="dica">💡 Substitui o Supino Reto. Foque no pico de contração no meio.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_4" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_4" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_4" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_5" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_5" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_5" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">4. Remada Baixa Triângulo</span><span class="dica">💡 Foco em espessura das costas. Esmague a dorsal no final da puxada.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_6" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_6" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_6" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_7" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_7" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_7" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">5. Elevação Lateral (Polia)</span><span class="dica">💡 Ombro nunca é demais. Tensão constante em todo o arco do movimento.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_8" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_8" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_8" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_9" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_9" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_9" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">6. Tríceps Corda</span><span class="dica">💡 Único isolado de tríceps da semana. 2 séries até a falha técnica.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_10" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_10" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_10" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_11" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_11" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_11" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">7. Rosca Direta EZ</span><span class="dica">💡 Perfil de força do bíceps. Subida explosiva e descida bem controlada.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_12" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_12" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_12" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_13" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_13" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_13" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div></div><div id="tab-Ter" class="tab-content "><h1>TERÇA: Lower 1</h1><div class="card"><span class="nome">1. Cadeira Flexora</span><span class="dica">💡 Meller: Começar pelo posterior protege o joelho. 2 séries intensas.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_14" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_14" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_14" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_15" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_15" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_15" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">2. Panturrilha Sentado</span><span class="dica">💡 Foco no sóleo. Priorize amplitude e segure 1s no alongamento.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_16" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_16" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_16" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_17" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_17" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_17" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">3. Leg Press (Pés Altos)</span><span class="dica">💡 Pés no topo da plataforma. Foco em Glúteo e Posterior.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_18" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_18" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_18" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_19" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_19" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_19" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">4. Cadeira Adutora</span><span class="dica">💡 Trabalho de estética interna da coxa. Mantenha o tronco firme.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_20" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_20" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_20" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_21" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_21" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_21" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">5. Cadeira Extensora</span><span class="dica">💡 Finalização de quadríceps. Subida explosiva, descida de 3 segundos.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_22" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_22" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_22" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_23" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_23" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_23" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div></div><div id="tab-Qui" class="tab-content "><h1>QUINTA: Upper B</h1><div class="card"><span class="nome">1. Puxada Neutra (V)</span><span class="dica">💡 Início com costas. Foco em Latíssimo do dorso (largura).</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_24" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_24" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_24" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_25" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_25" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_25" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">2. Supino Inclinado Máquina</span><span class="dica">💡 Repetição estratégica para progressão de carga máxima.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_26" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_26" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_26" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_27" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_27" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_27" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">3. Remada Articulada</span><span class="dica">💡 Zig-zag: Puxada horizontal pesada para densidade de costas.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_28" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_28" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_28" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_29" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_29" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_29" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">4. Crucifixo Inclinado</span><span class="dica">💡 Substitui o Cross. Foco no alongamento da fibra superior (Peito 2x).</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_30" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_30" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_30" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_31" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_31" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_31" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">5. Elevação Lateral (Halteres)</span><span class="dica">💡 Frequência 2x para ombro lateral. Foco na largura dos ombros.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_32" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_32" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_32" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_33" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_33" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_33" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">6. Rosca Inclinada Banco</span><span class="dica">💡 Bíceps em posição alongada. 2 séries focando no estiramento do músculo.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_34" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_34" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_34" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_35" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_35" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_35" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div></div><div id="tab-Sex" class="tab-content "><h1>SEXTA: Lower 2</h1><div class="card"><span class="nome">1. Stiff com Halteres</span><span class="dica">💡 Alongamento máximo do posterior. Mantenha os joelhos semi-flexionados.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_36" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_36" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_36" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_37" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_37" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_37" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">2. Mesa Flexora</span><span class="dica">💡 Isolamento de isquiotibiais. Mantenha o quadril colado no banco.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_38" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_38" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_38" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_39" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_39" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_39" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">3. Leg Press Unilateral</span><span class="dica">💡 Substituição do Búlgaro. Foco em força e correção de assimetrias.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_40" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_40" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_40" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_41" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_41" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_41" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">4. Panturrilha em Pé</span><span class="dica">💡 Frequência 2x. Foco em alongamento máximo e explosão na subida.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_42" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_42" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_42" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_43" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_43" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_43" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div><div class="card"><span class="nome">5. Cadeira Extensora</span><span class="dica">💡 Volume extra para garantir a frequência 2x de quadríceps na semana.</span>
-            <div class="serie-box"><span class="serie-label">Série Válida 1</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_44" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_44" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_44" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div>
-            <div class="serie-box"><span class="serie-label">Série Válida 2</span>
-                <div class="inputs">
-                    <div class="f-group"><label>KG</label><input type="number" step="any" id="k_45" oninput="asave()"></div>
-                    <div class="f-group"><label>REPS</label><input type="number" id="r_45" oninput="asave()"></div>
-                    <div class="f-group"><label>RIR</label><select id="s_45" onchange="asave()">
-                        <option value="Falha(0)">Falha(0)</option><option value="1 RIR">1 RIR</option><option value="2 RIR">2 RIR</option>
-                    </select></div>
-                </div>
-            </div></div></div><div id="tab-Hist" class="tab-content"><h1>Histórico</h1><div id="hList">Histórico vazio.</div></div></div>
-    <div class="footer-controls">
-        <button class="btn btn-save" onclick="save()">SALVAR HOJE</button>
-        <button class="btn btn-clear-fields" onclick="cf()">LIMPAR CAMPOS</button>
-        <button class="btn btn-clear-hist" onclick="ch()">APAGAR HIST</button>
+  .navbar{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--bg);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .navbar::-webkit-scrollbar{display:none;}
+  .nav-btn{flex:0 0 auto;padding:14px 16px;border:none;background:none;color:var(--txt3);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s;}
+  .nav-btn.active{color:var(--green);border-bottom-color:var(--green);}
+
+  .tab{display:none;padding:14px 14px 0;}
+  .tab.active{display:block;}
+  .day-header{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:14px;}
+
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+  .card.adapted{border-color:#5a3a00;background:#100d00;}
+  .card.adapted-new{border-color:#003a20;background:#00100a;}
+  .ex-header{display:flex;align-items:flex-start;gap:8px;}
+  .ex-num{font-size:11px;font-weight:700;color:var(--txt3);margin-top:2px;min-width:16px;}
+  .ex-name{font-size:14px;font-weight:600;color:var(--txt);line-height:1.3;flex:1;}
+  .badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+  .badge{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 6px;border-radius:4px;}
+  .badge-joelho{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(232,160,32,.25);}
+  .badge-novo{background:var(--green-bg);color:var(--green);border:1px solid rgba(0,201,122,.2);}
+  .badge-offline{background:rgba(232,160,32,0.15);color:var(--amber);border:1px solid rgba(232,160,32,.2);}
+  .dica{font-size:11px;color:var(--txt2);margin-top:8px;line-height:1.5;}
+
+  .series-wrap{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+  .serie-box{background:var(--bg3);border-radius:10px;padding:10px;}
+  .serie-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+  .inputs-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;}
+  .f-group{display:flex;flex-direction:column;gap:3px;}
+  .f-label{font-size:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--txt3);text-align:center;}
+  .f-group input,.f-group select{background:var(--bg4);border:1px solid var(--border2);color:var(--txt);padding:7px 2px;border-radius:7px;font-size:13px;text-align:center;width:100%;outline:none;-webkit-appearance:none;}
+  .f-group input:focus,.f-group select:focus{border-color:var(--green);}
+
+  .footer{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--bg);border-top:1px solid var(--border);padding:10px 14px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;}
+  .btn{padding:12px 6px;border:1px solid var(--border2);border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;cursor:pointer;background:var(--bg2);color:var(--txt2);transition:background .15s;}
+  .btn:active{opacity:.7;}
+  .btn-save{background:var(--green);color:#000;border-color:var(--green);}
+  .btn-danger{color:var(--danger);border-color:#3a1010;}
+
+  /* STATUS BAR */
+  .status-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+  .status-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+  .status-dot.online{background:var(--green);}
+  .status-dot.offline{background:var(--amber);}
+  .status-dot.syncing{background:var(--blue);animation:pulse 1s infinite;}
+  .status-txt{color:var(--txt3);}
+  .sync-btn{margin-left:auto;font-size:10px;font-weight:700;padding:4px 10px;border:1px solid var(--border2);border-radius:6px;background:var(--bg2);color:var(--txt2);cursor:pointer;text-transform:uppercase;letter-spacing:.5px;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+  /* CONFIG */
+  .config-block{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+  .config-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--txt3);margin-bottom:12px;}
+  .config-row{margin-bottom:10px;}
+  .config-label{font-size:11px;color:var(--txt2);margin-bottom:5px;display:block;}
+  .config-input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);padding:10px 12px;border-radius:8px;font-size:12px;outline:none;}
+  .config-input:focus{border-color:var(--green);}
+  .config-desc{font-size:10px;color:var(--txt3);margin-top:4px;line-height:1.5;}
+  .config-btn{width:100%;padding:12px;background:var(--green);color:#000;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;}
+  .config-btn.secondary{background:var(--bg3);color:var(--txt2);border:1px solid var(--border2);}
+  .config-status{font-size:11px;padding:8px 12px;border-radius:8px;margin-top:8px;display:none;}
+  .config-status.ok{background:var(--green-bg);color:var(--green);display:block;}
+  .config-status.err{background:#1a0000;color:var(--danger);display:block;}
+  .config-status.info{background:var(--blue-bg);color:var(--blue);display:block;}
+
+  /* HISTORICO */
+  .hist-empty{text-align:center;color:var(--txt3);font-size:13px;padding:60px 20px;}
+  .hist-entry{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+  .hist-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .hist-date{font-size:11px;font-weight:700;color:var(--green);}
+  .hist-diab{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;}
+  .hist-sync-badge{font-size:9px;color:var(--amber);font-weight:600;}
+  .hist-row{display:grid;grid-template-columns:1fr 44px 32px 50px;gap:6px;padding:4px 0;border-bottom:1px solid var(--border);align-items:center;}
+  .hist-row:last-child{border-bottom:none;}
+  .hist-ex{font-size:11px;color:var(--txt);}
+  .hist-val{font-size:11px;color:var(--txt2);text-align:right;}
+  .hist-rir{font-size:10px;color:var(--txt3);text-align:right;}
+
+  /* EVOLUÇÃO */
+  .evo-filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .evo-filters::-webkit-scrollbar{display:none;}
+  .filter-btn{flex:0 0 auto;font-size:11px;font-weight:600;padding:6px 12px;border:1px solid var(--border2);border-radius:20px;background:var(--bg2);color:var(--txt2);cursor:pointer;white-space:nowrap;}
+  .filter-btn.active{background:var(--green-bg);color:var(--green);border-color:rgba(0,201,122,.3);}
+  .chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;}
+  .chart-label{font-size:11px;font-weight:600;color:var(--txt2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;}
+  .no-data{text-align:center;color:var(--txt3);font-size:12px;padding:30px;}
+
+  /* EDITAR */
+  .edit-block{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
+  .edit-day{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:12px;}
+  .edit-row{margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+  .edit-row:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .edit-row input[type=text]{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);padding:8px 10px;border-radius:8px;font-size:12px;margin-bottom:5px;outline:none;}
+  .edit-row textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--txt2);padding:7px 10px;border-radius:8px;font-size:11px;resize:none;height:42px;line-height:1.4;outline:none;}
+  .edit-row input:focus,.edit-row textarea:focus{border-color:var(--green);}
+  .edit-actions{display:flex;gap:6px;margin-top:6px;}
+  .edbtn{font-size:10px;font-weight:700;padding:6px 12px;border:1px solid var(--border2);border-radius:7px;background:var(--bg3);color:var(--txt2);cursor:pointer;text-transform:uppercase;letter-spacing:.5px;}
+  .edbtn.ok{background:var(--green);color:#000;border-color:var(--green);}
+  .edbtn.del{color:var(--danger);border-color:#3a1010;}
+  .add-ex-btn{width:100%;margin-top:10px;padding:10px;background:var(--bg3);border:1px dashed var(--border2);border-radius:10px;color:var(--txt3);font-size:11px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;}
+  .msg{font-size:11px;padding:8px 12px;border-radius:8px;margin-bottom:10px;}
+  .msg.ok{background:var(--green-bg);color:var(--green);}
+  .msg.err{background:#1a0000;color:var(--danger);}
+  .section-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin:4px 0 14px;}
+</style>
+</head>
+<body>
+
+<div class="navbar" id="navbar">
+  <button class="nav-btn active" onclick="showTab('seg',this)">Segunda</button>
+  <button class="nav-btn" onclick="showTab('ter',this)">Terça</button>
+  <button class="nav-btn" onclick="showTab('qui',this)">Quinta</button>
+  <button class="nav-btn" onclick="showTab('sex',this)">Sexta</button>
+  <button class="nav-btn" onclick="showTab('hist',this)">Histórico</button>
+  <button class="nav-btn" onclick="showTab('evo',this)">Evolução</button>
+  <button class="nav-btn" onclick="showTab('edit',this)">Editar</button>
+  <button class="nav-btn" onclick="showTab('config',this)">Config</button>
+</div>
+
+<!-- Status bar de sync -->
+<div class="status-bar" id="status-bar" style="display:none;">
+  <div class="status-dot offline" id="status-dot"></div>
+  <span class="status-txt" id="status-txt">Offline</span>
+  <button class="sync-btn" onclick="syncNow()">Sincronizar</button>
+</div>
+
+<div id="workout-tabs"></div>
+
+<div id="tab-hist" class="tab">
+  <div class="section-lbl">Histórico de treinos</div>
+  <div id="hist-content"></div>
+</div>
+
+<div id="tab-evo" class="tab">
+  <div class="section-lbl">Evolução por exercício</div>
+  <div class="evo-filters" id="evo-filters"></div>
+  <div id="evo-charts"></div>
+</div>
+
+<div id="tab-edit" class="tab">
+  <div class="section-lbl">Editar exercícios</div>
+  <div id="msg-area"></div>
+  <div id="edit-content"></div>
+</div>
+
+<div id="tab-config" class="tab">
+  <div class="section-lbl">Configurações</div>
+
+  <div class="config-block">
+    <div class="config-title">Google Sheets — Sincronização</div>
+    <div class="config-row">
+      <label class="config-label">URL do Web App (Google Apps Script)</label>
+      <input class="config-input" type="url" id="cfg-url" placeholder="https://script.google.com/macros/s/..." oninput="saveConfig()">
+      <div class="config-desc">Cole aqui a URL gerada após publicar o Code.gs no Google Apps Script.</div>
     </div>
+    <button class="config-btn" onclick="testarConexao()">Testar conexão</button>
+    <div class="config-status" id="cfg-status"></div>
+  </div>
+
+  <div class="config-block">
+    <div class="config-title">Sincronização manual</div>
+    <button class="config-btn secondary" style="margin-bottom:8px" onclick="syncNow()">Baixar histórico da planilha</button>
+    <button class="config-btn secondary" onclick="uploadPendentes()">Enviar treinos pendentes</button>
+    <div class="config-status" id="sync-status"></div>
+  </div>
+
+  <div class="config-block">
+    <div class="config-title">Dados locais</div>
+    <button class="config-btn secondary" onclick="apagarHist()">Apagar histórico local</button>
+  </div>
+</div>
+
+<div class="footer" id="footer-bar">
+  <button class="btn btn-save" onclick="saveTreino()">Salvar treino</button>
+  <button class="btn" onclick="limparCampos()">Limpar</button>
+  <button class="btn btn-danger" onclick="apagarHist()">Apagar hist</button>
+</div>
+
 <script>
-    function openTab(id, b) {
-        document.querySelectorAll('.tab-content, .nav-btn').forEach(x => x.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); b.classList.add('active');
-        window.scrollTo(0,0);
-        if(id === 'tab-Hist') renderH();
+// ─── CONSTANTES ────────────────────────────────────────────────
+const STORAGE_KEY = 'lvp_v4';
+const CONFIG_KEY  = 'lvp_config';
+
+const DEFAULT_FICHA = {
+  seg:{title:'Segunda — Upper A',exercicios:[
+    {nome:'Supino Inclinado Máquina',dica:'Foco em carga bruta. 2 séries de 5–9 reps até a falha.',adapted:false},
+    {nome:'Puxada Alta Pronada',dica:'Puxe com o cotovelo para fora e sinta a escápula fechar.',adapted:false},
+    {nome:'Peck Deck (Voador)',dica:'Foco no pico de contração no centro. Não abra além do conforto.',adapted:false},
+    {nome:'Remada Baixa Triângulo',dica:'Esmague a dorsal no final da puxada. Foco em espessura de costas.',adapted:false},
+    {nome:'Elevação Lateral (Polia)',dica:'Tensão constante em todo o arco. Melhor que haltere para iniciante.',adapted:false},
+    {nome:'Crucifixo Invertido Máquina',dica:'Deltóide posterior — essencial para postura e saúde do ombro. Frequência 2x.',adapted:false,isNew:true},
+    {nome:'Tríceps Corda',dica:'Isolado de tríceps da sessão. 2 séries até a falha técnica.',adapted:false},
+    {nome:'Rosca Direta EZ',dica:'Subida explosiva e descida bem controlada em 2–3 segundos.',adapted:false},
+  ]},
+  ter:{title:'Terça — Lower 1',exercicios:[
+    {nome:'Cadeira Flexora',dica:'Começar pelo posterior protege o joelho. 2 séries intensas.',adapted:false},
+    {nome:'Panturrilha Sentado',dica:'Foco no sóleo. Priorize amplitude e segure 1s no ponto de maior alongamento.',adapted:false},
+    {nome:'Leg Press (Pés Centrais)',dica:'Pés no centro da plataforma para foco em quadríceps. Não desça além de 90° de flexão no joelho.',adapted:true},
+    {nome:'Cadeira Adutora',dica:'Trabalho interno da coxa. Mantenha o tronco firme e sem balanço.',adapted:false},
+    {nome:'Agachamento Smith Parcial (0°–60°)',dica:'Fortalece o quadríceps sem comprimir a patela. Amplitude limitada e controlada. Essencial para reabilitação.',adapted:true,isNew:true},
+  ]},
+  qui:{title:'Quinta — Upper B',exercicios:[
+    {nome:'Puxada Neutra (V)',dica:'Foco em Latíssimo do dorso. Puxe pensando nos cotovelos indo ao bolso.',adapted:false},
+    {nome:'Supino Inclinado Máquina',dica:'Repetição estratégica para progressão de carga máxima no peito.',adapted:false},
+    {nome:'Remada Articulada',dica:'Puxada horizontal pesada. Foco em densidade de costas.',adapted:false},
+    {nome:'Crucifixo Inclinado',dica:'Alongamento da fibra superior do peitoral. Cotovelo levemente flexionado e fixo.',adapted:false},
+    {nome:'Elevação Lateral (Halteres)',dica:'Frequência 2x para ombro lateral. Foco na largura dos ombros.',adapted:false},
+    {nome:'Tríceps Polia Barra Reta',dica:'Frequência 2x de tríceps. Cotovelo fixo ao lado do corpo durante todo o movimento.',adapted:false,isNew:true},
+    {nome:'Rosca Scott Máquina',dica:'Isola o bíceps com perfil de tensão diferente da Rosca EZ. Mais controlada para iniciante.',adapted:false,isNew:true},
+  ]},
+  sex:{title:'Sexta — Lower 2',exercicios:[
+    {nome:'Stiff com Halteres',dica:'Alongamento máximo do posterior. Mantenha joelhos semi-flexionados e costas neutras.',adapted:false},
+    {nome:'Mesa Flexora',dica:'Isolamento de isquiotibiais. Quadril colado no banco durante toda a execução.',adapted:false},
+    {nome:'Leg Press Unilateral',dica:'Foco em força e correção de assimetrias entre os lados. Amplitude até 90°.',adapted:false},
+    {nome:'Panturrilha em Pé',dica:'Frequência 2x. Foco em alongamento máximo e explosão na subida.',adapted:false},
+    {nome:'Hip Thrust',dica:'Glúteo forte estabiliza o joelho indiretamente. Zero sobrecarga na patela. Ótimo para o seu quadro.',adapted:true,isNew:true},
+  ]},
+};
+
+// ─── ESTADO ────────────────────────────────────────────────────
+let data = loadData();
+let config = loadConfig();
+let currentTab = 'seg';
+let chartInst = {};
+let evoFilter = null;
+let isSyncing = false;
+
+// ─── PERSISTÊNCIA LOCAL ────────────────────────────────────────
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { ficha: JSON.parse(JSON.stringify(DEFAULT_FICHA)), historico: [], campos: {}, pendentes: [] };
+    const d = JSON.parse(raw);
+    if (!d.ficha)     d.ficha     = JSON.parse(JSON.stringify(DEFAULT_FICHA));
+    if (!d.historico) d.historico = [];
+    if (!d.campos)    d.campos    = {};
+    if (!d.pendentes) d.pendentes = [];
+    return d;
+  } catch(e) {
+    return { ficha: JSON.parse(JSON.stringify(DEFAULT_FICHA)), historico: [], campos: {}, pendentes: [] };
+  }
+}
+function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+function loadConfig() {
+  try { return JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveConfig() {
+  config.url = document.getElementById('cfg-url').value.trim();
+  localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+}
+
+// ─── STATUS BAR ────────────────────────────────────────────────
+function updateStatusBar() {
+  const bar  = document.getElementById('status-bar');
+  const dot  = document.getElementById('status-dot');
+  const txt  = document.getElementById('status-txt');
+  if (!config.url) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  const pending = (data.pendentes || []).length;
+  if (isSyncing) {
+    dot.className = 'status-dot syncing';
+    txt.textContent = 'Sincronizando…';
+  } else if (!navigator.onLine) {
+    dot.className = 'status-dot offline';
+    txt.textContent = pending > 0 ? `Offline — ${pending} treino(s) pendente(s)` : 'Offline';
+  } else {
+    dot.className = 'status-dot online';
+    txt.textContent = pending > 0 ? `Online — ${pending} treino(s) para enviar` : 'Sincronizado';
+  }
+}
+
+// ─── API GOOGLE SHEETS ─────────────────────────────────────────
+async function apiGet(action) {
+  if (!config.url) throw new Error('URL não configurada');
+  const res = await fetch(`${config.url}?action=${action}`);
+  return res.json();
+}
+async function apiPost(body) {
+  if (!config.url) throw new Error('URL não configurada');
+  const res = await fetch(config.url, {
+    method: 'POST',
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+// ─── SYNC ──────────────────────────────────────────────────────
+async function syncNow() {
+  if (!config.url) { showConfigStatus('Cole a URL do Apps Script primeiro.', 'err'); showTab('config', document.querySelectorAll('.nav-btn')[7]); return; }
+  if (isSyncing) return;
+  isSyncing = true;
+  updateStatusBar();
+  try {
+    // 1. Enviar pendentes
+    const pendentes = [...(data.pendentes || [])];
+    for (const entry of pendentes) {
+      await apiPost({ action: 'saveEntry', entry });
     }
-    function save() {
-        let date = new Date().toLocaleDateString('pt-BR');
-        let h = JSON.parse(localStorage.getItem('lvp_h') || '[]');
-        let entry = { d: date, data: [] };
-        let active = document.querySelector('.tab-content.active');
-        if(active.id === 'tab-Hist') return alert("Selecione um treino primeiro.");
-        active.querySelectorAll('.card').forEach(c => {
-            c.querySelectorAll('.serie-box').forEach((s, i) => {
-                let k = s.querySelector('input[id^="k_"]').value, r = s.querySelector('input[id^="r_"]').value;
-                let rir = s.querySelector('select').value;
-                if(k || r) entry.data.push({n: c.querySelector('.nome').innerText, s: i+1, k: k, r: r, rir: rir});
-            });
-        });
-        if(!entry.data.length) return alert("Preencha ao menos uma carga!");
-        let sig = date + JSON.stringify(entry.data);
-        if(sig === localStorage.getItem('lvp_sig')) return alert("Este treino exato já foi salvo hoje!");
-        h.unshift(entry);
-        localStorage.setItem('lvp_h', JSON.stringify(h.slice(0,50)));
-        localStorage.setItem('lvp_sig', sig);
-        alert("✅ Treino arquivado com sucesso!");
-        if(confirm("Deseja limpar os campos de hoje?")) cf();
+    data.pendentes = [];
+
+    // 2. Baixar histórico completo
+    const resp = await apiGet('getHistorico');
+    if (resp.historico) {
+      data.historico = resp.historico;
     }
-    function renderH() {
-        let h = JSON.parse(localStorage.getItem('lvp_h') || '[]');
-        const container = document.getElementById('hList');
-        if(!h.length) return container.innerHTML = "Histórico vazio.";
-        container.innerHTML = h.map(session => `
-            <div class="hist-card"><span class="hist-date">📅 ${session.d}</span>
-                <table class="hist-table">
-                    ${session.data.map(d => `<tr><td>${d.n} (S${d.s})</td><td><b>${d.k}kg</b></td><td>${d.r}r</td><td>${d.rir}</td></tr>`).join('')}
-                </table>
-            </div>`).join('');
+    saveData();
+    isSyncing = false;
+    updateStatusBar();
+    if (currentTab === 'hist') renderHist();
+    if (currentTab === 'evo')  renderEvo();
+    showSyncStatus(`Sincronizado! ${data.historico.length} treino(s) carregados.`, 'ok');
+  } catch(e) {
+    isSyncing = false;
+    updateStatusBar();
+    showSyncStatus('Erro ao sincronizar. Verifique a URL e a conexão.', 'err');
+  }
+}
+
+async function uploadPendentes() {
+  if (!config.url) { showSyncStatus('URL não configurada.', 'err'); return; }
+  const pendentes = [...(data.pendentes || [])];
+  if (!pendentes.length) { showSyncStatus('Nenhum treino pendente.', 'ok'); return; }
+  try {
+    for (const entry of pendentes) {
+      await apiPost({ action: 'saveEntry', entry });
     }
-    function asave() {
-        document.querySelectorAll('input, select').forEach(i => localStorage.setItem('cur_'+i.id, i.value));
+    data.pendentes = [];
+    saveData();
+    updateStatusBar();
+    showSyncStatus(`${pendentes.length} treino(s) enviados com sucesso!`, 'ok');
+  } catch(e) {
+    showSyncStatus('Erro ao enviar. Verifique a conexão.', 'err');
+  }
+}
+
+async function testarConexao() {
+  const url = document.getElementById('cfg-url').value.trim();
+  if (!url) { showConfigStatus('Cole a URL primeiro.', 'err'); return; }
+  config.url = url;
+  showConfigStatus('Testando…', 'info');
+  try {
+    const resp = await fetch(`${url}?action=getHistorico`);
+    const json = await resp.json();
+    if (json.historico !== undefined) {
+      showConfigStatus('Conexão OK! Planilha encontrada.', 'ok');
+      saveConfig();
+      updateStatusBar();
+    } else {
+      showConfigStatus('Resposta inesperada. Verifique o script.', 'err');
     }
-    function cf() {
-        if(confirm("Zerar campos de hoje? O histórico será mantido.")) {
-            document.querySelectorAll('input').forEach(i => { i.value=""; localStorage.removeItem('cur_'+i.id); });
-            localStorage.removeItem('lvp_sig'); alert("Campos limpos!");
-        }
+  } catch(e) {
+    showConfigStatus('Falha na conexão. Verifique a URL e as permissões.', 'err');
+  }
+}
+
+function showConfigStatus(msg, type) {
+  const el = document.getElementById('cfg-status');
+  el.textContent = msg;
+  el.className = `config-status ${type}`;
+}
+function showSyncStatus(msg, type) {
+  const el = document.getElementById('sync-status');
+  el.textContent = msg;
+  el.className = `config-status ${type}`;
+  setTimeout(() => { el.className = 'config-status'; }, 4000);
+}
+
+// auto-sync quando voltar online
+window.addEventListener('online',  () => { updateStatusBar(); if (data.pendentes?.length) syncNow(); });
+window.addEventListener('offline', () => updateStatusBar());
+
+// ─── NAVEGAÇÃO ─────────────────────────────────────────────────
+function showTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById('tab-' + tab);
+  if (el) el.classList.add('active');
+  if (btn) btn.classList.add('active');
+  document.getElementById('footer-bar').style.display =
+    ['hist','evo','edit','config'].includes(tab) ? 'none' : 'grid';
+  if (tab === 'hist')   renderHist();
+  if (tab === 'evo')    renderEvo();
+  if (tab === 'edit')   renderEdit();
+  if (tab === 'config') renderConfig();
+}
+
+// ─── CONSTRUÇÃO DA FICHA ───────────────────────────────────────
+function buildWorkoutTabs() {
+  const container = document.getElementById('workout-tabs');
+  const days = ['seg','ter','qui','sex'];
+  let html = '';
+  days.forEach(day => {
+    const d = data.ficha[day];
+    html += `<div id="tab-${day}" class="tab"><div class="day-header">${d.title}</div>`;
+    d.exercicios.forEach((ex, ei) => {
+      let cardClass = 'card';
+      if (ex.isNew && ex.adapted) cardClass = 'card adapted-new';
+      else if (ex.adapted) cardClass = 'card adapted';
+      html += `<div class="${cardClass}">`;
+      html += `<div class="ex-header"><span class="ex-num">${ei+1}.</span><span class="ex-name">${ex.nome}</span></div>`;
+      const badges = [];
+      if (ex.adapted) badges.push('<span class="badge badge-joelho">🦵 joelho</span>');
+      if (ex.isNew)   badges.push('<span class="badge badge-novo">novo</span>');
+      if (badges.length) html += `<div class="badges">${badges.join('')}</div>`;
+      html += `<div class="dica">${ex.dica}</div><div class="series-wrap">`;
+      for (let s = 0; s < 2; s++) {
+        const kid = `${day}_${ei}_${s}_kg`;
+        const rid = `${day}_${ei}_${s}_rep`;
+        const sid = `${day}_${ei}_${s}_rir`;
+        const kv = data.campos[kid] || '';
+        const rv = data.campos[rid] || '';
+        const sv = data.campos[sid] || '';
+        html += `<div class="serie-box"><div class="serie-label">Série ${s+1}</div><div class="inputs-row">`;
+        html += `<div class="f-group"><div class="f-label">KG</div><input type="number" step="any" value="${kv}" id="${kid}" oninput="ac('${kid}',this.value)"></div>`;
+        html += `<div class="f-group"><div class="f-label">Reps</div><input type="number" value="${rv}" id="${rid}" oninput="ac('${rid}',this.value)"></div>`;
+        html += `<div class="f-group"><div class="f-label">RIR</div><select id="${sid}" onchange="ac('${sid}',this.value)">
+          <option value="Falha"${sv==='Falha'?' selected':''}>Falha</option>
+          <option value="1 RIR"${sv==='1 RIR'?' selected':''}>1 RIR</option>
+          <option value="2 RIR"${sv==='2 RIR'?' selected':''}>2 RIR</option>
+        </select></div>`;
+        html += `</div></div>`;
+      }
+      html += `</div></div>`;
+    });
+    html += `</div>`;
+  });
+  container.innerHTML = html;
+}
+
+function rebuildAndStay() {
+  buildWorkoutTabs();
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const el = document.getElementById('tab-' + currentTab);
+  if (el) el.classList.add('active');
+}
+
+function ac(key, val) { data.campos[key] = val; saveData(); }
+
+// ─── SALVAR TREINO ─────────────────────────────────────────────
+async function saveTreino() {
+  if (!['seg','ter','qui','sex'].includes(currentTab)) { alert('Selecione um dia de treino primeiro.'); return; }
+  const day = currentTab;
+  const d   = data.ficha[day];
+  const entradas = [];
+  d.exercicios.forEach((ex, ei) => {
+    for (let s = 0; s < 2; s++) {
+      const kg  = data.campos[`${day}_${ei}_${s}_kg`];
+      const rep = data.campos[`${day}_${ei}_${s}_rep`];
+      const rir = data.campos[`${day}_${ei}_${s}_rir`] || 'Falha';
+      if (kg || rep) entradas.push({ exercicio: ex.nome, serie: s+1, kg: parseFloat(kg)||0, reps: parseInt(rep)||0, rir });
     }
-    function ch() {
-        if(confirm("⚠️ APAGAR TODO O HISTÓRICO?")) {
-            localStorage.removeItem('lvp_h'); localStorage.removeItem('lvp_sig'); renderH(); alert("Histórico apagado.");
-        }
+  });
+  if (!entradas.length) { alert('Preencha ao menos uma carga antes de salvar.'); return; }
+  const hoje  = new Date().toLocaleDateString('pt-BR');
+  const entry = { data: hoje, dia: day, titulo: d.title, entradas, ts: Date.now() };
+
+  // Salva localmente sempre
+  data.historico.unshift(entry);
+  if (data.historico.length > 300) data.historico = data.historico.slice(0, 300);
+
+  // Tenta enviar para a planilha
+  if (config.url && navigator.onLine) {
+    try {
+      await apiPost({ action: 'saveEntry', entry });
+      // sucesso — não adiciona à fila de pendentes
+    } catch(e) {
+      data.pendentes = data.pendentes || [];
+      data.pendentes.push(entry);
     }
-    window.onload = () => {
-        document.querySelectorAll('input, select').forEach(i => {
-            let v = localStorage.getItem('cur_'+i.id); if(v) i.value = v;
-        });
-    };
+  } else if (config.url) {
+    // offline mas tem URL configurada — enfileira
+    data.pendentes = data.pendentes || [];
+    data.pendentes.push(entry);
+  }
+
+  saveData();
+  updateStatusBar();
+  alert('Treino salvo' + (config.url && !navigator.onLine ? ' (offline — será sincronizado quando conectar)' : '!'));
+  if (confirm('Limpar os campos?')) limparCampos(true);
+}
+
+function limparCampos(silent) {
+  if (!['seg','ter','qui','sex'].includes(currentTab)) return;
+  if (!silent && !confirm('Limpar campos do dia atual? O histórico é mantido.')) return;
+  const day = currentTab;
+  data.ficha[day].exercicios.forEach((_, ei) => {
+    for (let s = 0; s < 2; s++) {
+      ['kg','rep','rir'].forEach(f => {
+        const k = `${day}_${ei}_${s}_${f}`;
+        delete data.campos[k];
+        const el = document.getElementById(k);
+        if (el) el.value = f === 'rir' ? 'Falha' : '';
+      });
+    }
+  });
+  saveData();
+}
+
+function apagarHist() {
+  if (!confirm('Apagar histórico local? Esta ação não pode ser desfeita.')) return;
+  data.historico = [];
+  data.pendentes = [];
+  saveData();
+  updateStatusBar();
+  if (currentTab === 'hist') renderHist();
+  if (currentTab === 'evo')  renderEvo();
+}
+
+// ─── HISTÓRICO ─────────────────────────────────────────────────
+function renderHist() {
+  const c = document.getElementById('hist-content');
+  if (!data.historico.length) { c.innerHTML = '<div class="hist-empty">Nenhum treino salvo ainda.</div>'; return; }
+  const pendentesTs = new Set((data.pendentes || []).map(p => p.ts));
+  let html = '';
+  data.historico.forEach(entry => {
+    const isPendente = pendentesTs.has(entry.ts);
+    html += `<div class="hist-entry">`;
+    html += `<div class="hist-meta">
+      <span class="hist-date">${entry.data}</span>
+      <span style="display:flex;align-items:center;gap:6px">
+        ${isPendente ? '<span class="hist-sync-badge">pendente</span>' : ''}
+        <span class="hist-diab">${entry.titulo || entry.dia}</span>
+      </span>
+    </div>`;
+    entry.entradas.forEach(e => {
+      html += `<div class="hist-row">
+        <span class="hist-ex">${e.exercicio} <span style="color:var(--txt3)">S${e.serie}</span></span>
+        <span class="hist-val">${e.kg}kg</span>
+        <span class="hist-val">${e.reps}r</span>
+        <span class="hist-rir">${e.rir}</span>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  c.innerHTML = html;
+}
+
+// ─── EVOLUÇÃO ──────────────────────────────────────────────────
+function renderEvo() {
+  Object.values(chartInst).forEach(c => c.destroy());
+  chartInst = {};
+  const allEx = new Set();
+  data.historico.forEach(e => e.entradas.forEach(x => allEx.add(x.exercicio)));
+  if (!allEx.size) {
+    document.getElementById('evo-filters').innerHTML = '';
+    document.getElementById('evo-charts').innerHTML = '<div class="no-data">Nenhum treino salvo ainda.</div>';
+    return;
+  }
+  const exList = Array.from(allEx);
+  if (!evoFilter || !exList.includes(evoFilter)) evoFilter = exList[0];
+
+  document.getElementById('evo-filters').innerHTML = exList.map(ex =>
+    `<button class="filter-btn${ex === evoFilter ? ' active' : ''}" data-ex="${ex.replace(/"/g,'&quot;')}">${ex}</button>`
+  ).join('');
+  document.getElementById('evo-filters').onclick = function(e) {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    evoFilter = btn.dataset.ex;
+    renderEvo();
+  };
+
+  const chartsDiv = document.getElementById('evo-charts');
+  chartsDiv.innerHTML = '';
+  const exData = {};
+  [...data.historico].reverse().forEach(entry => {
+    entry.entradas.filter(e => e.exercicio === evoFilter).forEach(e => {
+      if (!exData[e.serie]) exData[e.serie] = [];
+      exData[e.serie].push({ data: entry.data, kg: e.kg, reps: e.reps });
+    });
+  });
+  if (!Object.keys(exData).length) { chartsDiv.innerHTML = '<div class="no-data">Sem dados para este exercício.</div>'; return; }
+  const colors = ['#00c97a','#3b9de8'];
+  Object.keys(exData).sort().forEach((serie, si) => {
+    const div = document.createElement('div');
+    div.className = 'chart-card';
+    div.innerHTML = `<div class="chart-label">Série ${serie} — carga (kg)</div><canvas id="ch-s${serie}" height="170"></canvas>`;
+    chartsDiv.appendChild(div);
+    setTimeout(() => {
+      const ctx = document.getElementById(`ch-s${serie}`);
+      if (!ctx) return;
+      chartInst[`s${serie}`] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: exData[serie].map(d => d.data),
+          datasets: [{ label:'kg', data: exData[serie].map(d => d.kg),
+            borderColor: colors[si%2], backgroundColor:'transparent',
+            pointBackgroundColor: colors[si%2], tension:.35, borderWidth:2, pointRadius:4, pointHoverRadius:6 }]
+        },
+        options: { responsive:true, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>`${c.parsed.y} kg`}} },
+          scales:{
+            x:{ticks:{font:{size:10},color:'#555'},grid:{color:'rgba(255,255,255,0.04)'}},
+            y:{ticks:{font:{size:10},color:'#555'},grid:{color:'rgba(255,255,255,0.04)'}}
+          }}
+      });
+    }, 50);
+  });
+}
+
+// ─── EDITAR ────────────────────────────────────────────────────
+function renderEdit() {
+  const c = document.getElementById('edit-content');
+  const days = ['seg','ter','qui','sex'];
+  let html = '';
+  days.forEach(day => {
+    const d = data.ficha[day];
+    html += `<div class="edit-block"><div class="edit-day">${d.title}</div>`;
+    d.exercicios.forEach((ex, ei) => {
+      html += `<div class="edit-row" id="er-${day}-${ei}">`;
+      html += `<input type="text" value="${ex.nome.replace(/"/g,'&quot;')}" id="en-${day}-${ei}" placeholder="Nome do exercício">`;
+      html += `<textarea id="ed-${day}-${ei}">${ex.dica}</textarea>`;
+      html += `<div class="edit-actions">
+        <button class="edbtn ok" onclick="saveEx('${day}',${ei})">Salvar</button>
+        <button class="edbtn del" onclick="delEx('${day}',${ei})">Remover</button>
+      </div></div>`;
+    });
+    html += `<button class="add-ex-btn" onclick="addEx('${day}')">+ Adicionar exercício</button></div>`;
+  });
+  c.innerHTML = html;
+}
+
+function showMsg(txt, type) {
+  const a = document.getElementById('msg-area');
+  a.innerHTML = `<div class="msg ${type}">${txt}</div>`;
+  setTimeout(() => a.innerHTML = '', 2500);
+}
+
+function saveEx(day, ei) {
+  const nome = document.getElementById(`en-${day}-${ei}`).value.trim();
+  const dica = document.getElementById(`ed-${day}-${ei}`).value.trim();
+  if (!nome) { showMsg('O nome não pode ser vazio.','err'); return; }
+  data.ficha[day].exercicios[ei].nome = nome;
+  data.ficha[day].exercicios[ei].dica = dica;
+  saveData();
+  rebuildAndStay();
+  showMsg('Exercício atualizado!','ok');
+}
+
+function delEx(day, ei) {
+  if (!confirm(`Remover "${data.ficha[day].exercicios[ei].nome}"?`)) return;
+  data.ficha[day].exercicios.splice(ei, 1);
+  saveData();
+  rebuildAndStay();
+  renderEdit();
+  showMsg('Exercício removido.','ok');
+}
+
+function addEx(day) {
+  data.ficha[day].exercicios.push({ nome:'Novo exercício', dica:'', adapted:false });
+  saveData();
+  rebuildAndStay();
+  renderEdit();
+  showMsg('Exercício adicionado — edite o nome acima.','ok');
+}
+
+// ─── CONFIG ────────────────────────────────────────────────────
+function renderConfig() {
+  const el = document.getElementById('cfg-url');
+  if (el) el.value = config.url || '';
+}
+
+// ─── INIT ──────────────────────────────────────────────────────
+buildWorkoutTabs();
+document.getElementById('tab-seg').classList.add('active');
+updateStatusBar();
+
+// auto-sync ao abrir se tiver URL e estiver online
+if (config.url && navigator.onLine) {
+  setTimeout(syncNow, 1500);
+}
 </script>
-</body></html>
+</body>
+</html>
