@@ -467,7 +467,9 @@ function rebuildAndStay() {
 function ac(key, val) { data.campos[key] = val; saveData(); }
 
 // ─── SALVAR TREINO ─────────────────────────────────────────────
+let _saving = false;
 async function saveTreino() {
+  if (_saving) return;
   if (!['seg','ter','qui','sex'].includes(currentTab)) { alert('Selecione um dia de treino primeiro.'); return; }
   const day = currentTab;
   const d   = data.ficha[day];
@@ -481,6 +483,10 @@ async function saveTreino() {
     }
   });
   if (!entradas.length) { alert('Preencha ao menos uma carga antes de salvar.'); return; }
+  _saving = true;
+  const btnSave = document.querySelector('.btn-save');
+  if (btnSave) { btnSave.textContent = 'Salvando…'; btnSave.style.opacity = '0.6'; }
+  // btnSave reutilizado abaixo — não redeclarar
   const hoje  = new Date().toLocaleDateString('pt-BR');
   const entry = { data: hoje, dia: day, titulo: d.title, entradas, ts: Date.now() };
 
@@ -505,6 +511,8 @@ async function saveTreino() {
 
   saveData();
   updateStatusBar();
+  _saving = false;
+  if (btnSave) { btnSave.textContent = 'Salvar treino'; btnSave.style.opacity = '1'; }
   alert('Treino salvo' + (config.url && !navigator.onLine ? ' (offline — será sincronizado quando conectar)' : '!'));
   if (confirm('Limpar os campos?')) limparCampos(true);
 }
@@ -715,6 +723,24 @@ updateStatusBar();
 // auto-sync ao abrir se tiver URL e estiver online
 if (config.url && navigator.onLine) {
   setTimeout(syncNow, 1500);
+}
+
+// Service Worker — atualização automática
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      newSW.addEventListener('statechange', () => {
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          window.location.reload();
+        }
+      });
+    });
+  });
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) { refreshing = true; window.location.reload(); }
+  });
 }
 </script>
 </body>
